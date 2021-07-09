@@ -92,8 +92,8 @@ def register():
         messagebox.showerror(message='Please enter a valid email address.')
     elif len(number) != 10:
         messagebox.showerror(message='Your cell number has to be 10 digits.')
-    elif len(kin_num) != 10:
-        messagebox.showerror(message='The cell number has to be 10 digits.')
+    # elif len(kin_num) != 10:
+    #     messagebox.showerror(message='The cell number has to be 10 digits.')
     elif not user_info:
         messagebox.showerror(message='This user is already registered. Please go to the sign in page.')
     else:
@@ -115,7 +115,7 @@ def register():
 
 def text_to_file(register):
     with open('email.txt', 'a') as email:
-        email.write('Email: {}'.format(register['user_email']))
+        email.write('Email: {}'.format(register['email']))
 
 
 def sign_in():
