@@ -45,26 +45,51 @@ id_entry.place(relx=0.5, rely=0.5)
 def sign_in():
     name = str(name_entry.get())
     surname = str(surname_entry.get())
-    id = (id_entry.get())
+    id_ = id_entry.get()
+    rsaidnumber.parse(id_)
     login_query = 'SELECT * FROM User_Info'
     mycursor.execute(login_query)
     user_info = mycursor.fetchall()
     print(user_info)
-    print(name, surname, id)
-    if name == '' or surname == '' or id == '':
+    print(name, surname, id_)
+    if name == '' or surname == '' or id_ == '':
         messagebox.showerror(message='Please fill in all your details')
-    elif len(id) != 13:
-        messagebox.showerror(message='Your ID number should be 13 digits.')
-    elif (name, surname, id) not in user_info:
+    elif len(id_) != 13:
+        messagebox.showerror(message='Enter a valid ID number.')
+    elif (name, surname, id_) not in user_info:
         messagebox.showerror(message='User not found. Please make sure you have registered before logging in.')
     else:
-        messagebox.showinfo(message='You have successfully logged in')
+        messagebox.showinfo(message='You have successfully signed in. Have a lovely day!')
+        root.destroy()
         date = datetime.date.today()
         print(date)
         time = datetime.datetime.now()
         print(time)
         time_query = "INSERT INTO SignIn (name, surname, id, date, time_in) values ('{}', '{}', '{}', '{}', '{}')"\
-            .format(name, surname, id, date, time)
+            .format(name, surname, id_, date, time)
+        mycursor.execute(time_query)
+        mydb.commit()
+
+
+def sign_out():
+    name = str(name_entry.get())
+    surname = str(surname_entry.get())
+    id_ = id_entry.get()
+    time_out_query = 'SELECT * FROM User_Info'
+    mycursor.execute(time_out_query)
+    user_info = mycursor.fetchall()
+    if name == '' or surname == '' or id_ == '':
+        messagebox.showerror(message='Please fill in all your details')
+    elif len(id_) != 13:
+        messagebox.showerror(message='Your ID number should be 13 digits.')
+    elif (name, surname, id_) not in user_info:
+        messagebox.showerror(message='User not found. Please make sure you have registered before singing in.')
+    else:
+        messagebox.showinfo(message='You have successfully signed out. Enjoy the rest of your day/evening!')
+        root.destroy()
+        time = datetime.datetime.now()
+        print(time)
+        time_query = "UPDATE SignIn SET time_out='{}' WHERE id='{}'".format(time, id_)
         mycursor.execute(time_query)
         mydb.commit()
 
@@ -72,7 +97,7 @@ def sign_in():
 signIn_button = Button(root, text='Sign In', width=20, command=sign_in, fg='black', bg='#9ce57e')
 signIn_button.place(relx=0.51, rely=0.65)
 
-signOut_button = Button(root, text='Sign Out', width=20, command=sign_in, fg='black', bg='#9ce57e')
+signOut_button = Button(root, text='Sign Out', width=20, command=sign_out, fg='black', bg='#9ce57e')
 signOut_button.place(relx=0.1, rely=0.65)
 
 frame = Frame(root, width=600, height=150, borderwidth=2, relief='ridge', bg='black')
@@ -90,10 +115,6 @@ def register():
 
 register_button = Button(frame, text='Register', width=20, command=register, fg='black', bg='#9ce57e')
 register_button.place(relx=0.35, rely=0.5)
-
-# sql = 'INSERT INTO Login (name, surname, id, number) VALUES (%s, %s, %s, %s)'
-# val = ('Zoe', 'Erispe', '9903200072086', '0849219477')
-# mycursor.execute(sql, val)
 
 
 def admin(event=None):

@@ -36,22 +36,22 @@ password_entry.place(relx=0.5, rely=0.6)
 
 
 def login():
-    id = adminId_entry.get()
+    id_ = adminId_entry.get()
     password = password_entry.get()
     query = 'SELECT * from Admin_SignIn'
     mycursor.execute(query)
     admin_details = mycursor.fetchall()
     print(admin_details)
-    if id == '' or password == '':
+    if id_ == '' or password == '':
         messagebox.showerror(message='Please enter all fields.')
-    elif id and password in admin_details:
+    elif (id_, password) in admin_details:
         messagebox.showinfo(message='You have successfully logged into the admin account.')
         root.destroy()
         import admin
     else:
         admin = False
         for details in admin_details:
-            if id in details:
+            if id_ in details:
                 admin = True
             if admin:
                 messagebox.showerror(message='Incorrect password entered.')
