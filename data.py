@@ -240,25 +240,31 @@ def grant():
 def update_admin_password():
     id_ = id_entry.get()
     password = password_entry.get()
-    if id_ == '' or password == '':
-        messagebox.showerror(message='Make sure both the ID number and password entry fields are filled in.')
-    elif len(id_) != 13:
-        messagebox.showerror(message='The ID number should be 13 digits.')
-    elif len(password) > 10:
-        messagebox.showerror(message='Password cannot exceed 10 characters.')
-    else:
-        query = "UPDATE Admin_SignIn SET password='{}' WHERE id='{}'".format(password, id_)
-        mycursor.execute(query)
-        mydb.commit()
-        messagebox.showinfo(message='You have successfully updated this users admin password!')
+    admin = "SELECT * FROM Admin_SignIn WHERE id='{}'".format(id_)
+    mycursor.execute(admin)
+    if id_ in admin:
+        if id_ == '' or password == '':
+            messagebox.showerror(message='Make sure both the ID number and password entry fields are filled in.')
+        elif len(id_) != 13:
+            messagebox.showerror(message='The ID number should be 13 digits.')
+        elif len(password) > 10:
+            messagebox.showerror(message='Password cannot exceed 10 characters.')
+        else:
+            query = "UPDATE Admin_SignIn SET password='{}' WHERE id='{}'".format(password, id_)
+            mycursor.execute(query)
+            mydb.commit()
+            messagebox.showinfo(message='You have successfully updated this users admin password!')
 
 
 def remove():
     id_ = id_entry.get()
-    remove_admin_query = "DELETE FROM Admin_SignIn WHERE id='{}'".format(id_)
-    mycursor.execute(remove_admin_query)
-    mydb.commit()
-    messagebox.showinfo(message='You have successfully revoked this users admin privileges.')
+    admin = "SELECT * FROM Admin_SignIn WHERE id='{}'".format(id_)
+    mycursor.execute(admin)
+    if id_ in admin:
+        remove_admin_query = "DELETE FROM Admin_SignIn WHERE id='{}'".format(id_)
+        mycursor.execute(remove_admin_query)
+        mydb.commit()
+        messagebox.showinfo(message='You have successfully revoked this users admin privileges.')
 
 
 tree.bind('<ButtonRelease-1>', fill_entries)

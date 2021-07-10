@@ -72,26 +72,29 @@ def sign_in():
 
 
 def sign_out():
-    name = str(name_entry.get())
-    surname = str(surname_entry.get())
-    id_ = id_entry.get()
-    time_out_query = 'SELECT * FROM User_Info'
-    mycursor.execute(time_out_query)
-    user_info = mycursor.fetchall()
-    if name == '' or surname == '' or id_ == '':
-        messagebox.showerror(message='Please fill in all your details')
-    elif len(id_) != 13:
-        messagebox.showerror(message='Your ID number should be 13 digits.')
-    elif (name, surname, id_) not in user_info:
-        messagebox.showerror(message='User not found. Please make sure you have registered before singing in.')
-    else:
-        messagebox.showinfo(message='You have successfully signed out. Enjoy the rest of your day/evening!')
-        root.destroy()
-        time = datetime.datetime.now()
-        print(time)
-        time_query = "UPDATE SignIn SET time_out='{}' WHERE id='{}'".format(time, id_)
-        mycursor.execute(time_query)
-        mydb.commit()
+    try:
+        name = str(name_entry.get())
+        surname = str(surname_entry.get())
+        id_ = id_entry.get()
+        time_out_query = 'SELECT * FROM User_Info'
+        mycursor.execute(time_out_query)
+        user_info = mycursor.fetchall()
+        if name == '' or surname == '' or id_ == '':
+            messagebox.showerror(message='Please fill in all your details')
+        elif len(id_) != 13:
+            raise ValueError
+        elif (name, surname, id_) not in user_info:
+            messagebox.showerror(message='User not found. Please make sure you have registered before singing in.')
+        else:
+            messagebox.showinfo(message='You have successfully signed out. Enjoy the rest of your day/evening!')
+            root.destroy()
+            time = datetime.datetime.now()
+            print(time)
+            time_query = "UPDATE SignIn SET time_out='{}' WHERE id='{}'".format(time, id_)
+            mycursor.execute(time_query)
+            mydb.commit()
+    except ValueError:
+        messagebox.showerror(message='Please enter a valid ID number.')
 
 
 signIn_button = Button(root, text='Sign In', width=20, command=sign_in, fg='black', bg='#9ce57e')

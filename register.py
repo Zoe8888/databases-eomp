@@ -68,49 +68,52 @@ kinNumber_entry.place(relx=0.5, rely=0.6)
 
 
 def register():
-    name = name_entry.get()
-    surname = surname_entry.get()
-    id_ = id_entry.get()
-    rsaidnumber.parse(id_)
-    number = phone_entry.get()
-    email = email_entry.get()
-    kin_name = kinName_entry.get()
-    kin_num = kinNumber_entry.get()
-    id_query = 'SELECT id from User_Info'
-    mycursor.execute(id_query)
-    ids = mycursor.fetchall()
-    user_query = 'SELECT * FROM User_Info'
-    mycursor.execute(user_query)
-    user_info = mycursor.fetchall()
-    if name == '' or surname == '' or id_ == '' or number == '' or email == '' or kin_name == '' or kin_num == '':
-        messagebox.showerror(message='Please make sure you filled all of the categories.')
-    elif len(id_) != 13:
-        messagebox.showerror(message='Please enter a valid ID number.')
-    elif id_ in ids:
-        messagebox.showerror(message='This ID number has already been registered with another user.')
-    elif not validate_email.validate_email(email, verify=False):
+    try:
+        name = name_entry.get()
+        surname = surname_entry.get()
+        id_ = id_entry.get()
+        id_no = rsaidnumber.parse(id_)
+        number = phone_entry.get()
+        email = email_entry.get()
+        kin_name = kinName_entry.get()
+        kin_num = kinNumber_entry.get()
+        id_query = 'SELECT id from User_Info'
+        mycursor.execute(id_query)
+        ids = mycursor.fetchall()
+        user_query = 'SELECT * FROM User_Info'
+        mycursor.execute(user_query)
+        user_info = mycursor.fetchall()
+        if name == '' or surname == '' or id_ == '' or number == '' or email == '' or kin_name == '' or kin_num == '':
+            messagebox.showerror(message='Please make sure you filled all of the categories.')
+        elif len(id_) != 13:
+            messagebox.showerror(message='Please enter a valid ID number.')
+        elif id_no in ids:
+            messagebox.showerror(message='This ID number has already been registered with another user.')
+        elif not validate_email.validate_email(email, verify=True):
+            raise ValueError
+        elif len(number) != 10:
+            messagebox.showerror(message='Your cell number has to be 10 digits.')
+        elif len(kin_num) != 10:
+            messagebox.showerror(message='The cell number has to be 10 digits.')
+        elif (name, surname, id_, email, number, kin_name, kin_num) in user_info:
+            messagebox.showerror(message='This user is already registered. Please go to the sign in page.')
+        else:
+            register_query = "INSERT INTO User_Info (name, surname, id, email, number) VALUES " \
+                             "('{}', '{}', '{}', '{}', '{}')".format(name, surname, id_, email, number)
+            mycursor.execute(register_query)
+            register_kin_query = "INSERT INTO NextOfKin (kinName, kinNumber, id) VALUES ('{}', '{}', '{}')" \
+                .format(kin_name, kin_num, id_)
+
+            user_email = {'email': email}
+            text_to_file(user_email)
+
+            mycursor.execute(register_kin_query)
+            mydb.commit()
+            messagebox.showinfo(message='You have been successfully registered. Please sign in in the next window.')
+            root.destroy()
+            import signIn
+    except ValueError:
         messagebox.showerror(message='Please enter a valid email address.')
-    elif len(number) != 10:
-        messagebox.showerror(message='Your cell number has to be 10 digits.')
-    # elif len(kin_num) != 10:
-    #     messagebox.showerror(message='The cell number has to be 10 digits.')
-    elif not user_info:
-        messagebox.showerror(message='This user is already registered. Please go to the sign in page.')
-    else:
-        register_query = "INSERT INTO User_Info (name, surname, id, email, number) VALUES " \
-                         "('{}', '{}', '{}', '{}', '{}')".format(name, surname, id_, email, number)
-        mycursor.execute(register_query)
-        register_kin_query = "INSERT INTO NextOfKin (kinName, kinNumber, id) VALUES ('{}', '{}', '{}')"\
-            .format(kin_name, kin_num, id_)
-
-        user_email = {'email': email}
-        text_to_file(user_email)
-
-        mycursor.execute(register_kin_query)
-        mydb.commit()
-        messagebox.showinfo(message='You have been successfully registered. Please sign in in the next window.')
-        root.destroy()
-        import signIn
 
 
 def text_to_file(register):

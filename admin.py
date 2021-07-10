@@ -70,30 +70,30 @@ def send_email():
     admin_query = 'SELECT * FROM Admin_SignIn'
     mycursor.execute(admin_query)
     admin_info = mycursor.fetchall()
-    with open('email.txt', 'r') as file:
-        for line in file:
-            if 'Email' in line:
-                user_email = line[7:-1]
     if numbers >= 1:
-        if user_email in admin_info:
-            sender_email_id = 'lottogenerator1@gmail.com'
-            receiver_email_id = [user_email]
-            password = 'winnerWinner'
-            subject = 'Not all users have signed out'
-            msg = MIMEMultipart()
-            msg['From'] = sender_email_id
-            msg['To'] = ','.join(receiver_email_id)
-            msg['Subject'] = subject
-            body = 'Good afternoon / evening. \n Not all users have signed out for the day. Please do so on their ' \
-                   'behalf in the admin account. \n Kind regards, \n LifeChoices Academy Team'
-            msg.attach(MIMEText(body, 'plain'))
-            text = msg.as_string()
-            s = smtplib.SMTP('smtp.gmail.com', 587)
-            s.starttls()
-            s.login(sender_email_id, password)
-            s.sendmail(sender_email_id, receiver_email_id, text)
-            s.quit()
-            messagebox.showinfo(message='A message has been sent to admin regarding users still signed in.')
+        with open('email.txt', 'r') as file:
+            for line in file:
+                if 'Email' in line:
+                    user_email = line[7:-1]
+            if user_email in admin_info:
+                sender_email_id = 'lottogenerator1@gmail.com'
+                receiver_email_id = [user_email]
+                password = 'winnerWinner'
+                subject = 'Not all users have signed out'
+                msg = MIMEMultipart()
+                msg['From'] = sender_email_id
+                msg['To'] = ','.join(receiver_email_id)
+                msg['Subject'] = subject
+                body = 'Good afternoon / evening. \n Not all users have signed out for the day. Please do so on their ' \
+                       'behalf in the admin account. \n Kind regards, \n LifeChoices Academy Team'
+                msg.attach(MIMEText(body, 'plain'))
+                text = msg.as_string()
+                s = smtplib.SMTP('smtp.gmail.com', 587)
+                s.starttls()
+                s.login(sender_email_id, password)
+                s.sendmail(sender_email_id, receiver_email_id, text)
+                s.quit()
+                messagebox.showinfo(message='A message has been sent to admin regarding users still signed in.')
 
 
 def user_info():
@@ -121,7 +121,9 @@ def quit_():
 
 update()
 
-update_button = Button(frame, text='Update', width=10, command=lambda: [update()], bg='#9ce57e')
+# root.bind('<ButtonRelease-1>', send_email)
+
+update_button = Button(frame, text='Update', width=10, command=update, bg='#9ce57e')
 update_button.place(relx=0.7, rely=0.1)
 
 user_info_label = Label(frame, text='To view all the user information click the button:', bg='black', fg='#9ce57e')
