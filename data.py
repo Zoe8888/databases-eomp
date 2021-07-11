@@ -43,6 +43,12 @@ tree.heading('id', text='ID number', anchor=tk.CENTER)
 tree.heading('email', text='Email address', anchor=tk.CENTER)
 tree.heading('number', text='Cell number', anchor=tk.CENTER)
 
+# Creating a scrollbar
+scroll_bar = tk.Scrollbar(root, orient='vertical')
+scroll_bar.configure(command=tree.yview)
+tree.configure(yscrollcommand=scroll_bar.set)
+scroll_bar.pack(fill=Y, side=RIGHT)
+
 # Frame for editing user data
 frame = Frame(root, width=600, height=700, borderwidth=2, relief='ridge', bg='black')
 frame.place(relx=0.1, rely=0.24)
