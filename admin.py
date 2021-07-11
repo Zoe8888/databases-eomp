@@ -5,7 +5,7 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
-
+# Initializing the window
 root = Tk()
 # Creating window title
 root.title('Admin Account')
@@ -16,6 +16,7 @@ root.resizable('False', 'False')
 # Setting background color
 root.config(bg='black')
 
+# Calling the database
 mydb = mysql.connector.connect(user='lifechoices', password='@Lifechoices1234', host='127.0.0.1',
                                database='LC_Academy', auth_plugin='mysql_native_password')
 mycursor = mydb.cursor()

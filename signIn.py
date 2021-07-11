@@ -4,6 +4,8 @@ import mysql.connector
 import rsaidnumber
 import datetime
 
+
+# Initializing the window
 root = Tk()
 # Creating window title
 root.title('Sign In')
@@ -14,34 +16,41 @@ root.resizable('False', 'False')
 # Setting a background color
 root.config(bg='black')
 
+# Calling the database
 mydb = mysql.connector.connect(user='lifechoices', password='@Lifechoices1234', host='127.0.0.1',
                                database='LC_Academy', auth_plugin='mysql_native_password')
 mycursor = mydb.cursor()
 
+# Setting an image
 logo = PhotoImage(file='Logo-Life-Choices.png')
 logo = logo.subsample(3)
 lc_logo = Label(root, image=logo, height=300, width=600, bg='black')
 lc_logo.place(relx=0.1, rely=0)
 
+# Creating a header for the sign in window
 header = Label(root, text='Welcome to LifeChoices Coding Academy. Please sign in.', font=50, bg='black', fg='#9ce57e')
 header.place(relx=0.1, rely=0.32)
 
+# Name label & entry points
 name_label = Label(root, text='Please enter your name:', bg='black', fg='#9ce57e')
 name_label.place(relx=0.1, rely=0.4)
 name_entry = Entry(root, width=25, bg='#9ce57e')
 name_entry.place(relx=0.5, rely=0.4)
 
+# Surname label & entry points
 surname_label = Label(root, text='Please enter your surname:', bg='black', fg='#9ce57e')
 surname_label.place(relx=0.1, rely=0.45)
 surname_entry = Entry(root, width=25, bg='#9ce57e')
 surname_entry.place(relx=0.5, rely=0.45)
 
+# ID number label & entry points
 id_label = Label(root, text='Please enter your ID number:', bg='black', fg='#9ce57e')
 id_label.place(relx=0.1, rely=0.5)
 id_entry = Entry (root, width=25, bg='#9ce57e')
 id_entry.place(relx=0.5, rely=0.5)
 
 
+# Sign in function. If the users details are in the database they will be signed in.
 def sign_in():
     name = str(name_entry.get())
     surname = str(surname_entry.get())
@@ -71,6 +80,7 @@ def sign_in():
         mydb.commit()
 
 
+# Sign out function. If the users details are in the database they will be signed out.
 def sign_out():
     try:
         name = str(name_entry.get())
@@ -97,34 +107,42 @@ def sign_out():
         messagebox.showerror(message='Please enter a valid ID number.')
 
 
+# Sign in button
 signIn_button = Button(root, text='Sign In', width=20, command=sign_in, fg='black', bg='#9ce57e')
 signIn_button.place(relx=0.51, rely=0.65)
 
+# Sign out button
 signOut_button = Button(root, text='Sign Out', width=20, command=sign_out, fg='black', bg='#9ce57e')
 signOut_button.place(relx=0.1, rely=0.65)
 
+# Frame for new users
 frame = Frame(root, width=600, height=150, borderwidth=2, relief='ridge', bg='black')
 frame.place(relx=0.07, rely=0.75)
 
+# Label informing new users they need to register
 newUser_label = Label(frame, text='If you are new to LifeChoices please register as new user before logging in.',
                       bg='black', fg='#9ce57e')
 newUser_label.place(relx=0.1, rely=0.2)
 
 
+# Function to take new users to the register window
 def register():
     root.destroy()
     import register
 
 
+# Register button for new users
 register_button = Button(frame, text='Register', width=20, command=register, fg='black', bg='#9ce57e')
 register_button.place(relx=0.35, rely=0.5)
 
 
+# Function to take the user to the admin login window
 def admin(event=None):
     root.destroy()
     import admin_login
 
 
+# Bind key to open up the admin login window
 root.bind('<Control-a>', admin)
 
 root.mainloop()

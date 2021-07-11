@@ -2,6 +2,8 @@ from tkinter import *
 from tkinter import messagebox
 import mysql.connector
 
+
+# Initializing the window
 root = Tk()
 # Creating window title
 root.title('Admin Login')
@@ -12,6 +14,7 @@ root.resizable('False', 'False')
 # Setting background color
 root.config(bg='black')
 
+# Calling the database
 mydb = mysql.connector.connect(user='lifechoices', password='@Lifechoices1234', host='127.0.0.1',
                                database='LC_Academy', auth_plugin='mysql_native_password')
 mycursor = mydb.cursor()
