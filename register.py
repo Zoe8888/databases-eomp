@@ -101,11 +101,9 @@ def register():
         user_info = mycursor.fetchall()
         if name == '' or surname == '' or id_ == '' or number == '' or email == '' or kin_name == '' or kin_num == '':
             messagebox.showerror(message='Please make sure you filled all of the categories.')
-        elif len(id_) != 13:
-            messagebox.showerror(message='Please enter a valid ID number.')
         elif id_no in ids:
             messagebox.showerror(message='This ID number has already been registered with another user.')
-        elif not validate_email.validate_email(email, verify=True):
+        elif not validate_email.validate_email(email):
             raise ValueError
         elif len(number) != 10:
             messagebox.showerror(message='Your cell number has to be 10 digits.')
@@ -129,7 +127,7 @@ def register():
             root.destroy()
             import signIn
     except ValueError:
-        messagebox.showerror(message='Please enter a valid email address.')
+        messagebox.showerror(message='Invalid details entered.')
 
 
 # Saving the users email to a text to file

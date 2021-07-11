@@ -171,14 +171,16 @@ def update():
     time_out = time_out_entry.get()
     kin_name = kinName_entry.get()
     kin_num = kinNumber_entry.get()
-    update_query = "UPDATE User_Info SET name='{}', surname='{}', id='{}', email='{}', number='{}' WHERE id='{}'"\
-        .format(name, surname, id_, email, number, id_)
-    mycursor.execute(update_query)
-    time_update_query = "UPDATE SignIn SET name='{}', surname'{}', id='{}', time_in='{}', time_out='{}' WHERE id='{}'"\
-        .format(name, surname, id_, time_in, time_out, id_)
-    mycursor.execute(time_update_query)
+    update_query = "UPDATE User_Info SET name=%s, surname=%s, id=%s, email=%s, number=%s WHERE id=%s"
+    val = (name, surname, id_, email, number, id_)
+    mycursor.execute(update_query, val)
+    time_update_query = "UPDATE SignIn SET name=%s, surname=%s, id=%s, time_in=%s, time_out=%s WHERE " \
+                        "id=%s"
+    values = (name, surname, id_, time_in, time_out, id_)
+    mycursor.execute(time_update_query, values)
     mydb.commit()
-    kin_update_query = "UPDATE NextOfKin SET kinName='{}', kinNumber='{}' where id='{}'".format(kin_name, kin_num, id_)
+    kin_update_query = "UPDATE NextOfKin SET kinName='{0}', kinNumber='{1}' where id='{2}'".format(kin_name, kin_num,
+                                                                                                   id_)
     mycursor.execute(kin_update_query)
     mydb.commit()
     messagebox.showinfo(message='Update successful!')
@@ -234,7 +236,9 @@ def fill_entries(event=None):
     time_in_entry.delete(0, END)
     time_in_entry.insert(0, time_stamp[0][4])
     time_out_entry.delete(0, END)
-    time_out_entry.insert(0, time_stamp[0][5])
+    if time_stamp[0][5] is not None:
+        time_out_entry.insert(0, time_stamp[0][5])
+        print(time_stamp)
 
     kin_query = "SELECT * FROM NextOfKin WHERE id like '%{}'".format(user_info[2])
     mycursor.execute(kin_query)

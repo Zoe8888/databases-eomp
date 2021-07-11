@@ -52,32 +52,35 @@ id_entry.place(relx=0.5, rely=0.5)
 
 # Sign in function. If the users details are in the database they will be signed in.
 def sign_in():
-    name = str(name_entry.get())
-    surname = str(surname_entry.get())
-    id_ = id_entry.get()
-    rsaidnumber.parse(id_)
-    login_query = 'SELECT * FROM User_Info'
-    mycursor.execute(login_query)
-    user_info = mycursor.fetchall()
-    print(user_info)
-    print(name, surname, id_)
-    if name == '' or surname == '' or id_ == '':
-        messagebox.showerror(message='Please fill in all your details')
-    elif len(id_) != 13:
-        messagebox.showerror(message='Enter a valid ID number.')
-    elif (name, surname, id_) not in user_info:
-        messagebox.showerror(message='User not found. Please make sure you have registered before logging in.')
-    else:
-        messagebox.showinfo(message='You have successfully signed in. Have a lovely day!')
-        root.destroy()
-        date = datetime.date.today()
-        print(date)
-        time = datetime.datetime.now()
-        print(time)
-        time_query = "INSERT INTO SignIn (name, surname, id, date, time_in) values ('{}', '{}', '{}', '{}', '{}')"\
-            .format(name, surname, id_, date, time)
-        mycursor.execute(time_query)
-        mydb.commit()
+    try:
+        name = str(name_entry.get())
+        surname = str(surname_entry.get())
+        id_ = id_entry.get()
+        rsaidnumber.parse(id_)
+        login_query = 'SELECT name, surname, id FROM User_Info'
+        mycursor.execute(login_query)
+        user_info = mycursor.fetchall()
+        print(user_info)
+        print(name, surname, id_)
+        if name == '' or surname == '' or id_ == '':
+            messagebox.showerror(message='Please fill in all your details')
+        elif len(id_) != 13:
+            messagebox.showerror(message='Enter a valid ID number.')
+        elif (name, surname, id_) not in user_info:
+            messagebox.showerror(message='User not found. Please make sure you have registered before logging in.')
+        else:
+            messagebox.showinfo(message='You have successfully signed in. Have a lovely day!')
+            # root.destroy()
+            date = datetime.date.today()
+            print(date)
+            time = datetime.datetime.now()
+            print(time)
+            time_query = "INSERT INTO SignIn (name, surname, id, date, time_in) values ('{}', '{}', '{}', '{}', '{}')" \
+                .format(name, surname, id_, date, time)
+            mycursor.execute(time_query)
+            mydb.commit()
+    except ValueError:
+        messagebox.showerror(message='Your ID number is invalid.')
 
 
 # Sign out function. If the users details are in the database they will be signed out.
